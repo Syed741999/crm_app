@@ -1,0 +1,289 @@
+<div class="ds-crm-wrapper">
+
+  <!-- GREET SECTION -->
+  <div class="greet-section" id="greet-section">
+
+    <!-- LEFT: Avatar + Text -->
+    <div class="greet-left">
+      <div class="greet-avatar-wrap">
+        <div class="greet-avatar" id="greet-avatar">
+          <img id="greet-avatar-img" src="" alt="" style="display:none;"/>
+          <span id="greet-avatar-initials"></span>
+        </div>
+        <div class="greet-avatar-pulse"></div>
+      </div>
+
+      <div class="greet-text">
+        <div class="greet-eyebrow" id="greet-eyebrow">
+          <span class="greet-eye-dot"></span>
+          <span id="greet-week-label">Loading...</span>
+        </div>
+        <div class="greet-title" id="greet-title">Welcome back.</div>
+        <div class="greet-subtitle" id="greet-subtitle">Fetching your pipeline summary...</div>
+
+        <div class="greet-actions">
+          <button class="g-btn g-btn-primary" id="btn-new-lead">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Lead
+          </button>
+          <button class="g-btn g-btn-secondary" id="btn-new-enquiry">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Enquiry
+          </button>
+          <button class="g-btn g-btn-ghost" id="btn-log-activity">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Log Activity
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: KPI Stat Boxes -->
+    <div class="greet-stats" id="greet-stats">
+      <div class="g-stat" id="stat-pipeline">
+        <div class="g-stat-value" id="stat-pipeline-val">—</div>
+        <div class="g-stat-label">AED Pipeline</div>
+        <div class="g-stat-bar"><div class="g-stat-bar-fill" id="stat-pipeline-bar" style="width:0%"></div></div>
+      </div>
+      <div class="g-stat" id="stat-won">
+        <div class="g-stat-value won" id="stat-won-val">—</div>
+        <div class="g-stat-label">AED Won</div>
+        <div class="g-stat-bar"><div class="g-stat-bar-fill won" id="stat-won-bar" style="width:0%"></div></div>
+      </div>
+      <div class="g-stat" id="stat-leads">
+        <div class="g-stat-value leads" id="stat-leads-val">—</div>
+        <div class="g-stat-label">Active Leads</div>
+        <div class="g-stat-bar"><div class="g-stat-bar-fill leads" id="stat-leads-bar" style="width:0%"></div></div>
+      </div>
+      <div class="g-stat" id="stat-overdue">
+        <div class="g-stat-value overdue" id="stat-overdue-val">—</div>
+        <div class="g-stat-label">Overdue Activities</div>
+        <div class="g-stat-bar"><div class="g-stat-bar-fill overdue" id="stat-overdue-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+  </div><!-- /greet-section -->
+
+  <!-- SLIDE-IN DRAWER OVERLAY -->
+  <div class="ds-overlay" id="ds-overlay"></div>
+
+  <!-- NEW LEAD DRAWER -->
+  <div class="ds-drawer" id="drawer-lead">
+    <div class="ds-drawer-header">
+      <div class="ds-drawer-title">
+        <span class="ds-drawer-icon">👤</span>
+        New Lead
+      </div>
+      <button class="ds-drawer-close" id="close-lead-drawer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="ds-drawer-body">
+      <div class="ds-field">
+        <label class="ds-label">Full Name <span class="ds-req">*</span></label>
+        <input class="ds-input" id="lead-full-name" type="text" placeholder="e.g. Khalid Al Rashidi"/>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Company</label>
+        <input class="ds-input" id="lead-company" type="text" placeholder="e.g. Deyaar Developments"/>
+      </div>
+      <div class="ds-row2">
+        <div class="ds-field">
+          <label class="ds-label">Phone</label>
+          <input class="ds-input" id="lead-phone" type="text" placeholder="+971 50 000 0000"/>
+        </div>
+        <div class="ds-field">
+          <label class="ds-label">Email</label>
+          <input class="ds-input" id="lead-email" type="email" placeholder="email@company.ae"/>
+        </div>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Source <span class="ds-req">*</span></label>
+        <select class="ds-select" id="lead-source">
+          <option value="">Pick one...</option>
+          <option>Referral</option>
+          <option>Instagram</option>
+          <option>LinkedIn</option>
+          <option>Website</option>
+          <option>Walk-in</option>
+          <option>WhatsApp</option>
+          <option>Event</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Assigned To</label>
+        <select class="ds-select" id="lead-assigned-to">
+          <option value="">Select user...</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Notes</label>
+        <textarea class="ds-textarea" id="lead-notes" placeholder="Any context worth capturing right now?"></textarea>
+      </div>
+    </div>
+    <div class="ds-drawer-footer">
+      <button class="g-btn g-btn-primary" id="save-lead-btn" style="flex:1;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Lead
+      </button>
+      <button class="g-btn g-btn-ghost" id="cancel-lead-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- NEW ENQUIRY DRAWER -->
+  <div class="ds-drawer" id="drawer-enquiry">
+    <div class="ds-drawer-header">
+      <div class="ds-drawer-title">
+        <span class="ds-drawer-icon">📋</span>
+        New Enquiry
+      </div>
+      <button class="ds-drawer-close" id="close-enquiry-drawer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="ds-drawer-body">
+      <div class="ds-field">
+        <label class="ds-label">Enquiry Title <span class="ds-req">*</span></label>
+        <input class="ds-input" id="enq-title" type="text" placeholder="Client Name – Fitout Type"/>
+        <div class="ds-hint">e.g. Emaar Development – Office Fitout</div>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Linked Lead</label>
+        <select class="ds-select" id="enq-lead">
+          <option value="">No lead (optional)</option>
+        </select>
+      </div>
+      <div class="ds-row2">
+        <div class="ds-field">
+          <label class="ds-label">Value (AED) <span class="ds-req">*</span></label>
+          <input class="ds-input" id="enq-value" type="number" placeholder="e.g. 75000"/>
+        </div>
+        <div class="ds-field">
+          <label class="ds-label">Stage</label>
+          <select class="ds-select" id="enq-stage">
+            <option>New Lead</option>
+            <option>Qualified</option>
+            <option>Proposal</option>
+            <option>Negotiation</option>
+          </select>
+        </div>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Service Type</label>
+        <select class="ds-select" id="enq-service-type">
+          <option value="">Select service...</option>
+          <option>Office Fitout</option>
+          <option>Retail Fitout</option>
+          <option>Hospitality Fitout</option>
+          <option>Villa &amp; Residential Fitout</option>
+          <option>Commercial Fitout</option>
+          <option>Turnkey Fitout</option>
+          <option>Joinery &amp; Millwork</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Assigned To</label>
+        <select class="ds-select" id="enq-assigned-to">
+          <option value="">Select user...</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Notes</label>
+        <textarea class="ds-textarea" id="enq-notes" placeholder="What do we know so far?"></textarea>
+      </div>
+    </div>
+    <div class="ds-drawer-footer">
+      <button class="g-btn g-btn-primary" id="save-enquiry-btn" style="flex:1;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Enquiry
+      </button>
+      <button class="g-btn g-btn-ghost" id="cancel-enquiry-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- LOG ACTIVITY DRAWER -->
+  <div class="ds-drawer" id="drawer-activity">
+    <div class="ds-drawer-header">
+      <div class="ds-drawer-title">
+        <span class="ds-drawer-icon">⏱</span>
+        Log Activity
+      </div>
+      <button class="ds-drawer-close" id="close-activity-drawer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="ds-drawer-body">
+      <div class="ds-field">
+        <label class="ds-label">Activity Type <span class="ds-req">*</span></label>
+        <div class="ds-toggle-row">
+          <button class="ds-toggle-btn active" id="act-type-call" data-val="Call">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.19 6.19l1.73-1.74a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call
+          </button>
+          <button class="ds-toggle-btn" id="act-type-meeting" data-val="Meeting">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Meeting
+          </button>
+        </div>
+        <input type="hidden" id="act-type-val" value="Call"/>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Link to Enquiry</label>
+        <select class="ds-select" id="act-enquiry">
+          <option value="">Select enquiry (optional)</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Link to Lead</label>
+        <select class="ds-select" id="act-lead">
+          <option value="">Select lead (optional)</option>
+        </select>
+      </div>
+      <div class="ds-row2">
+        <div class="ds-field">
+          <label class="ds-label">Date <span class="ds-req">*</span></label>
+          <input class="ds-input" id="act-date" type="date"/>
+        </div>
+        <div class="ds-field">
+          <label class="ds-label">Time</label>
+          <input class="ds-input" id="act-time" type="time"/>
+        </div>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Duration</label>
+        <select class="ds-select" id="act-duration">
+          <option value="15">15 minutes</option>
+          <option value="30" selected>30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60">1 hour</option>
+          <option value="90">1.5 hours</option>
+          <option value="120">2 hours</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Follow-up Action</label>
+        <select class="ds-select" id="act-followup">
+          <option value="">None</option>
+          <option>Send proposal</option>
+          <option>Schedule next call</option>
+          <option>Internal review first</option>
+          <option>Waiting on client</option>
+        </select>
+      </div>
+      <div class="ds-field">
+        <label class="ds-label">Outcome / Notes <span class="ds-req">*</span></label>
+        <textarea class="ds-textarea" id="act-notes" placeholder="What happened? What was agreed? Next steps?" style="min-height:100px;"></textarea>
+      </div>
+    </div>
+    <div class="ds-drawer-footer">
+      <button class="g-btn g-btn-primary" id="save-activity-btn" style="flex:1;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Log Activity
+      </button>
+      <button class="g-btn g-btn-ghost" id="cancel-activity-btn">Cancel</button>
+    </div>
+  </div>
+
+</div><!-- /ds-crm-wrapper -->

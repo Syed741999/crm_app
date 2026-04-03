@@ -1,0 +1,28 @@
+{
+ "app": "crm_app",
+ "creation": "2026-04-03 09:50:39.196733",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "briefcase-business",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "briefcase-business",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Gulf CRM",
+   "link_to": "Gulf CRM",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-03 10:21:24.631888",
+ "modified_by": "Administrator",
+ "name": "Gulf CRM",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Gulf CRM"
+}

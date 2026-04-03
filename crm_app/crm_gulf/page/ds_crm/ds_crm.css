@@ -1,0 +1,565 @@
+/* ─────────────────────────────────────────────
+   DS CRM — Greet Section + Drawers
+   Frappe Custom Page Stylesheet
+   Fonts: Cormorant Garamond (display) + Outfit (UI)
+───────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* ── CSS VARIABLES ─────────────────────────── */
+.ds-crm-wrapper {
+  --bg:       #F2F0EC;
+  --bg2:      #EAE8E2;
+  --bg3:      #E0DDD7;
+  --white:    #FFFFFF;
+  --ink:      #18191F;
+  --ink2:     #2B2D36;
+  --ink3:     #444754;
+  --muted:    #717584;
+  --faint:    #A2A5B3;
+  --hair:     #D6D4CE;
+
+  --lav:      #6B4EBA;
+  --lav-l:    #F0ECFB;
+  --blue:     #1E47C8;
+  --blue-l:   #EBF0FF;
+  --grn:      #1A7245;
+  --grn-l:    #E5F4ED;
+  --amb:      #B85C08;
+  --amb-l:    #FDF0E6;
+  --red:      #B82828;
+  --red-l:    #FCEAEA;
+
+  --r:        12px;
+  --rs:       8px;
+  --sh1:      0 2px 8px rgba(24,25,31,0.07), 0 1px 3px rgba(24,25,31,0.04);
+  --sh2:      0 6px 24px rgba(24,25,31,0.1), 0 2px 8px rgba(24,25,31,0.06);
+  --sh3:      0 20px 60px rgba(24,25,31,0.14), 0 6px 16px rgba(24,25,31,0.07);
+
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── GREET SECTION ─────────────────────────── */
+.greet-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  background: var(--white);
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  box-shadow: var(--sh1);
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: greetFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Decorative right-side gradient wash */
+.greet-section::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 35%;
+  background: linear-gradient(to left, rgba(107, 78, 186, 0.05), transparent);
+  pointer-events: none;
+}
+
+@keyframes greetFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LEFT SIDE ─────────────────────────────── */
+.greet-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── AVATAR ────────────────────────────────── */
+.greet-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.greet-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #A78BFA, #6D28D9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25), var(--sh1);
+  position: relative;
+  z-index: 1;
+}
+
+.greet-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.greet-avatar-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid rgba(107, 78, 186, 0.18);
+  animation: avatarPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.6; }
+  50%       { transform: scale(1.1); opacity: 0.1; }
+}
+
+/* ── GREET TEXT ────────────────────────────── */
+.greet-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.greet-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--lav);
+  background: var(--lav-l);
+  padding: 3px 11px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.greet-eye-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lav);
+  animation: blinkDot 2s ease-in-out infinite;
+}
+
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.greet-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+}
+
+.greet-subtitle {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+/* ── ACTION BUTTONS ────────────────────────── */
+.greet-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── BUTTONS ───────────────────────────────── */
+.g-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: var(--rs);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.g-btn-primary {
+  background: var(--lav);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(107, 78, 186, 0.28);
+}
+.g-btn-primary:hover {
+  background: #5B3DA0;
+  box-shadow: 0 4px 14px rgba(107, 78, 186, 0.36);
+  transform: translateY(-1px);
+}
+.g-btn-primary:active {
+  transform: translateY(0);
+}
+
+.g-btn-secondary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(30, 71, 200, 0.25);
+}
+.g-btn-secondary:hover {
+  background: #1638A0;
+  transform: translateY(-1px);
+}
+
+.g-btn-ghost {
+  background: var(--white);
+  color: var(--ink3);
+  border: 1px solid var(--hair);
+}
+.g-btn-ghost:hover {
+  background: var(--bg2);
+  border-color: var(--ink3);
+}
+
+/* ── KPI STAT BOXES ────────────────────────── */
+.greet-stats {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.g-stat {
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 13px 16px;
+  text-align: center;
+  min-width: 90px;
+  transition: box-shadow 0.18s, transform 0.18s;
+  cursor: default;
+}
+
+.g-stat:hover {
+  box-shadow: var(--sh2);
+  transform: translateY(-2px);
+}
+
+.g-stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.g-stat-value.won     { color: var(--grn); }
+.g-stat-value.leads   { color: var(--blue); }
+.g-stat-value.overdue { color: var(--red); }
+
+.g-stat-label {
+  font-size: 9.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.g-stat-bar {
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 99px;
+  margin-top: 9px;
+  overflow: hidden;
+}
+
+.g-stat-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--lav);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.g-stat-bar-fill.won     { background: var(--grn); }
+.g-stat-bar-fill.leads   { background: var(--blue); }
+.g-stat-bar-fill.overdue { background: var(--red); }
+
+/* ── DRAWER OVERLAY ────────────────────────── */
+.ds-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 25, 31, 0.22);
+  backdrop-filter: blur(3px);
+  z-index: 1040;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.ds-overlay.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* ── DRAWER ────────────────────────────────── */
+.ds-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 440px;
+  max-width: 100vw;
+  background: var(--white);
+  box-shadow: var(--sh3);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(110%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Outfit', sans-serif;
+}
+.ds-drawer.open {
+  transform: translateX(0);
+}
+
+.ds-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--hair);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.ds-drawer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-drawer-icon {
+  font-size: 16px;
+}
+
+.ds-drawer-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--bg2);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: all 0.14s;
+}
+.ds-drawer-close:hover {
+  background: var(--bg3);
+  color: var(--ink);
+}
+
+.ds-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.ds-drawer-body::-webkit-scrollbar { width: 3px; }
+.ds-drawer-body::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+.ds-drawer-footer {
+  padding: 13px 20px;
+  border-top: 1px solid var(--hair);
+  background: var(--bg);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── FORM FIELDS ───────────────────────────── */
+.ds-field {
+  margin-bottom: 15px;
+}
+
+.ds-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.ds-row2 .ds-field {
+  margin-bottom: 0;
+}
+
+.ds-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-bottom: 6px;
+}
+
+.ds-req {
+  color: var(--red);
+  margin-left: 1px;
+}
+
+.ds-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.ds-input,
+.ds-select,
+.ds-textarea {
+  width: 100%;
+  border: 1px solid var(--hair);
+  border-radius: var(--rs);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink2);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.16s, box-shadow 0.16s;
+  box-sizing: border-box;
+}
+.ds-input::placeholder,
+.ds-textarea::placeholder { color: var(--faint); }
+.ds-input:focus,
+.ds-select:focus,
+.ds-textarea:focus {
+  border-color: var(--lav);
+  box-shadow: 0 0 0 3px rgba(107, 78, 186, 0.1);
+}
+
+.ds-textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+}
+
+/* ── ACTIVITY TYPE TOGGLE ──────────────────── */
+.ds-toggle-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ds-toggle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--hair);
+  border-radius: var(--rs);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--white);
+  transition: all 0.15s;
+}
+.ds-toggle-btn:hover {
+  border-color: var(--lav);
+  color: var(--lav);
+  background: var(--lav-l);
+}
+.ds-toggle-btn.active {
+  border-color: var(--lav);
+  background: var(--lav-l);
+  color: var(--lav);
+}
+
+/* ── TOAST NOTIFICATION ────────────────────── */
+.ds-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--sh3);
+  z-index: 2000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.ds-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.ds-toast.success::before {
+  content: '✓  ';
+  color: #6EE7B7;
+}
+.ds-toast.error::before {
+  content: '✕  ';
+  color: #FCA5A5;
+}
+
+/* ── LOADING SHIMMER ───────────────────────── */
+.ds-shimmer {
+  background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── RESPONSIVE ────────────────────────────── */
+@media (max-width: 900px) {
+  .greet-section {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .greet-stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .g-stat {
+    min-width: 0;
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .greet-section { padding: 16px; }
+  .greet-title   { font-size: 20px; }
+  .ds-drawer     { width: 100%; }
+  .greet-actions { gap: 6px; }
+  .g-btn         { padding: 6px 11px; font-size: 12px; }
+  .greet-stats   { grid-template-columns: 1fr 1fr; }
+}
