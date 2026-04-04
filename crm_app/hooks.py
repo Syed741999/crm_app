@@ -250,6 +250,12 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+# Fixtures
+# --------
+fixtures = [
+	"Page"
+]
+
 # In /home/syed/frappe-bench/apps/crm_app/crm_app/hooks.py
 
 page_js = {

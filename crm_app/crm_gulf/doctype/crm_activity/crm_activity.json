@@ -2,22 +2,22 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series:",
- "creation": "2026-04-03 13:10:00.000000",
+ "creation": "2026-04-03 13:10:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
-  "activity_type",
-  "enquiry",
-  "column_break_1",
-  "lead",
   "logged_by",
+  "activity_type",
+  "follow_up_action",
+  "column_break_1",
+  "enquiry",
+  "lead",
   "section_break_timing",
   "activity_date",
   "activity_time",
   "column_break_2",
   "duration_minutes",
-  "follow_up_action",
   "section_break_outcome",
   "outcome_notes"
  ],
@@ -32,22 +32,22 @@
    "report_hide": 1
   },
   {
+   "bold": 1,
    "fieldname": "activity_type",
    "fieldtype": "Select",
-   "label": "Activity Type",
-   "options": "Call\nMeeting",
-   "reqd": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "bold": 1
+   "label": "Activity Type",
+   "options": "Call\nMeeting",
+   "reqd": 1
   },
   {
    "fieldname": "enquiry",
    "fieldtype": "Link",
-   "label": "Linked Enquiry",
-   "options": "CRM Enquiry",
    "in_list_view": 1,
-   "in_standard_filter": 1
+   "in_standard_filter": 1,
+   "label": "Linked Enquiry",
+   "options": "CRM Enquiry"
   },
   {
    "fieldname": "column_break_1",
@@ -56,19 +56,19 @@
   {
    "fieldname": "lead",
    "fieldtype": "Link",
-   "label": "Linked Lead",
-   "options": "CRM Lead",
    "in_list_view": 1,
-   "in_standard_filter": 1
+   "in_standard_filter": 1,
+   "label": "Linked Lead",
+   "options": "CRM Lead"
   },
   {
+   "default": "__user",
    "fieldname": "logged_by",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Logged By",
    "options": "User",
-   "default": "__user",
-   "read_only": 1,
-   "in_list_view": 1
+   "read_only": 1
   },
   {
    "fieldname": "section_break_timing",
@@ -76,13 +76,13 @@
    "label": "Timing"
   },
   {
+   "default": "Today",
    "fieldname": "activity_date",
    "fieldtype": "Date",
-   "label": "Date",
-   "reqd": 1,
-   "default": "Today",
    "in_list_view": 1,
-   "in_standard_filter": 1
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "activity_time",
@@ -94,18 +94,17 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "30",
    "fieldname": "duration_minutes",
    "fieldtype": "Select",
    "label": "Duration",
-   "options": "15\n30\n45\n60\n90\n120",
-   "default": "30"
+   "options": "15\n30\n45\n60\n90\n120"
   },
   {
    "fieldname": "follow_up_action",
-   "fieldtype": "Select",
-   "label": "Follow-up Action",
-   "options": "\nSend proposal\nSchedule next call\nInternal review first\nWaiting on client",
-   "in_standard_filter": 1
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Follow-up Action"
   },
   {
    "fieldname": "section_break_outcome",
@@ -122,7 +121,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-03 13:10:00.000000",
+ "modified": "2026-04-04 02:14:26.463144",
  "modified_by": "Administrator",
  "module": "CRM GULF",
  "name": "CRM Activity",
@@ -142,10 +141,9 @@
   },
   {
    "create": 1,
-   "delete": 0,
    "read": 1,
-   "write": 1,
-   "role": "All"
+   "role": "All",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
