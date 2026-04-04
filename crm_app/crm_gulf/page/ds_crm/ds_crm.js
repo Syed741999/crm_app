@@ -904,7 +904,7 @@ function NeedsChasingSection(props) {
 
 			// Auto-refresh
 			React.useEffect(function () {
-				var id = setInterval(refresh, 5 * 60 * 1000);
+				var id = setInterval(refresh, 10000);
 				return function () { clearInterval(id); };
 			}, []);
 
