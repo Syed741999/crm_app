@@ -40,6 +40,7 @@
   -webkit-font-smoothing: antialiased;
 
  margin-left:20px;
+ margin-right:20px;
  margin-top:10px;
 }
 
@@ -248,7 +249,7 @@
 /* ── KPI STAT BOXES ────────────────────────── */
 .greet-stats {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
@@ -258,9 +259,9 @@
   background: var(--bg);
   border: 1px solid var(--hair);
   border-radius: 10px;
-  padding: 11px 14px;
+  padding: 15px 25px;
   text-align: center;
-  min-width: 82px;
+  min-width: 90px;
   transition: box-shadow 0.18s, transform 0.18s;
   cursor: default;
 }
@@ -478,7 +479,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 .ds-row2 .ds-field { margin-bottom: 0; }
 
@@ -710,6 +711,7 @@
   box-shadow: var(--sh1);
   padding: 16px 18px;
   min-height: 200px;
+  
 }
 
 /* ── SECTION HEADER ──────────────────────── */
@@ -717,7 +719,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 15px;
 }
 .ds-sec-ttl {
   font-family: 'Cormorant Garamond', serif;
@@ -897,6 +899,559 @@
   font-size: 12px;
   color: var(--faint);
 }
+/* ── MY BRIEF BOARD ──────────────────────── */
+.ds-board-wrap {
+  background: var(--white);
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  box-shadow: var(--sh1);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.ds-board-scroll {
+  overflow-x: auto;
+  margin: 0 -4px;
+  padding: 0 4px 8px;
+}
+.ds-board-scroll::-webkit-scrollbar { height: 3px; }
+.ds-board-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+.ds-kb-board {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.ds-kb-col {
+  width: 195px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ds-kb-col-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px 4px;
+  border-bottom: 2px solid var(--hair);
+}
+.ds-kb-col-hdr.stage-new-brief     { border-color: var(--muted); }
+.ds-kb-col-hdr.stage-qualified     { border-color: var(--blue); }
+.ds-kb-col-hdr.stage-proposal      { border-color: var(--lav); }
+.ds-kb-col-hdr.stage-negotiation   { border-color: var(--amb); }
+.ds-kb-col-hdr.stage-won           { border-color: var(--grn); }
+.ds-kb-col-hdr.stage-lost          { border-color: var(--red); }
+
+.ds-kb-col-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ds-kb-col-hdr.stage-qualified   .ds-kb-col-name { color: var(--blue); }
+.ds-kb-col-hdr.stage-proposal    .ds-kb-col-name { color: var(--lav); }
+.ds-kb-col-hdr.stage-negotiation .ds-kb-col-name { color: var(--amb); }
+.ds-kb-col-hdr.stage-won         .ds-kb-col-name { color: var(--grn); }
+.ds-kb-col-hdr.stage-lost        .ds-kb-col-name { color: var(--red); }
+
+.ds-kb-col-cnt {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+}
+
+.ds-kb-card {
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  border-radius: 9px;
+  padding: 11px 12px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.ds-kb-card:hover {
+  box-shadow: var(--sh2);
+  transform: translateY(-2px);
+}
+
+.ds-kb-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink2);
+  line-height: 1.35;
+  margin-bottom: 5px;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-kb-card-who {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.ds-kb-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ds-kb-card-val {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.ds-kb-card-days {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ds-kb-days-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ds-kb-card-empty {
+  background: var(--bg);
+  border: 1.5px dashed var(--hair);
+  border-radius: 9px;
+  padding: 20px 12px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* ── ENQUIRY DETAIL PANEL ──────────────────── */
+.ds-enq-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 460px;
+  max-width: 100vw;
+  background: var(--white);
+  box-shadow: var(--sh3);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(110%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Outfit', sans-serif;
+}
+.ds-enq-panel.open {
+  transform: translateX(0);
+}
+
+.ds-enq-panel-hdr {
+  padding: 16px 18px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--hair);
+  flex-shrink: 0;
+}
+
+.ds-enq-panel-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ds-enq-panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-enq-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.ds-enq-stage-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+.ds-enq-stage-badge.stage-new-brief    { background: var(--bg3); color: var(--ink3); }
+.ds-enq-stage-badge.stage-qualified    { background: var(--blue-l); color: var(--blue); }
+.ds-enq-stage-badge.stage-proposal     { background: var(--lav-l); color: var(--lav); }
+.ds-enq-stage-badge.stage-negotiation  { background: var(--amb-l); color: var(--amb); }
+.ds-enq-stage-badge.stage-won          { background: var(--grn-l); color: var(--grn); }
+.ds-enq-stage-badge.stage-lost         { background: var(--red-l); color: var(--red); }
+
+.ds-enq-panel-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.ds-enq-panel-who {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Stage progress bar */
+.ds-enq-sbar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.ds-enq-seg {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-bottom: 10px;
+}
+
+.ds-enq-seg-line {
+  height: 3px;
+  width: 100%;
+  border-radius: 99px;
+  background: var(--hair);
+  transition: background 0.3s;
+}
+
+.ds-enq-seg-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Tabs */
+.ds-enq-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--hair);
+  background: var(--white);
+  flex-shrink: 0;
+}
+
+.ds-enq-tab {
+  padding: 10px 18px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.ds-enq-tab:hover { color: var(--ink2); }
+.ds-enq-tab.active {
+  color: var(--lav);
+  border-bottom-color: var(--lav);
+}
+
+.ds-enq-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+}
+.ds-enq-body::-webkit-scrollbar { width: 3px; }
+.ds-enq-body::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+/* Overview grid */
+.ds-ov-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.ds-ov-lbl {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.ds-ov-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ds-ov-notes-lbl {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.ds-ov-notes-box {
+  font-size: 12.5px;
+  line-height: 1.6;
+  background: var(--bg);
+  padding: 12px 14px;
+  border-radius: 9px;
+  color: var(--ink2);
+  border: 1px solid var(--hair);
+  margin-bottom: 16px;
+  min-height: 48px;
+}
+
+.ds-ov-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Activity log items */
+.ds-act-log-item {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--bg2);
+}
+.ds-act-log-item:last-child { border-bottom: none; }
+
+.ds-act-log-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.ds-act-log-type {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink2);
+}
+
+.ds-act-log-date {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.ds-act-log-followup {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--lav);
+  margin-bottom: 2px;
+}
+
+.ds-act-log-notes {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ds-act-log-empty {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+/* ── NETWORKING EVENTS ───────────────────── */
+.ds-net-wrap {
+  background: var(--white);
+  border: 1px solid var(--hair);
+  border-radius: var(--r);
+  box-shadow: var(--sh1);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.ds-net-scroll {
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.ds-net-scroll::-webkit-scrollbar { height: 3px; }
+.ds-net-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+.ds-net-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.ds-net-card {
+  width: 195px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top:2px;
+}
+.ds-net-card:hover {
+  box-shadow: var(--sh2);
+  transform: translateY(-2px);
+}
+
+.ds-net-card-date {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+.ds-net-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink2);
+  line-height: 1.35;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-net-card-venue {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ds-net-card-cat {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 99px;
+  margin-top: 2px;
+  width: fit-content;
+}
+
+/* ── EVENT DETAIL PANEL ──────────────────── */
+.ds-evt-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 460px;
+  max-width: 100vw;
+  background: var(--white);
+  box-shadow: var(--sh3);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(110%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Outfit', sans-serif;
+}
+.ds-evt-panel.open { transform: translateX(0); }
+
+.ds-evt-panel-hdr {
+  padding: 16px 18px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--hair);
+  flex-shrink: 0;
+}
+
+.ds-evt-panel-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ds-evt-panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-evt-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.ds-evt-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--hair);
+  background: var(--white);
+  flex-shrink: 0;
+}
+
+.ds-evt-tab {
+  padding: 10px 18px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.ds-evt-tab:hover { color: var(--ink2); }
+.ds-evt-tab.active {
+  color: var(--lav);
+  border-bottom-color: var(--lav);
+}
+
+.ds-evt-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+}
+.ds-evt-body::-webkit-scrollbar { width: 3px; }
+.ds-evt-body::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+
+.ds-evt-ov-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 14px;
+}
+
 
 /* ── REMOVE NUMBER INPUT SPINNERS ────────── */
 input[type=number]::-webkit-inner-spin-button,
