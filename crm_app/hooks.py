@@ -259,9 +259,9 @@ fixtures = [
 # In /home/syed/frappe-bench/apps/crm_app/crm_app/hooks.py
 
 page_js = {
-    "ds-crm": "crm_gulf/page/ds_crm/ds_crm.js"
+    # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.js"
 }
 
 page_css = {
-    "ds-crm": "crm_gulf/page/ds_crm/ds_crm.css"
+    # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.css"
 }
