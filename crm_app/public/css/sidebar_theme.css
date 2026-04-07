@@ -1,0 +1,370 @@
+/* ═══════════════════════════════════════════════════
+   CRM Gulf — Full Theme
+   Sidebar + .frappe-menu.context-menu
+   Tokens: #705CFF  #5ABCF9  #A58FFF  #68C2A3
+           #E8E8EF  #F9F9F9
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  --crm-p:     #705CFF;
+  --crm-sky:   #5ABCF9;
+  --crm-lav:   #A58FFF;
+  --crm-mint:  #68C2A3;
+  --crm-srf:   #E8E8EF;
+  --crm-bg:    #F9F9F9;
+}
+
+
+/* ─────────────────────────────────────────
+   SIDEBAR — LIGHT
+───────────────────────────────────────── */
+
+.body-sidebar {
+  background: var(--crm-bg) !important;
+  border-right: 1px solid var(--crm-srf) !important;
+}
+
+.sidebar-header {
+  background: var(--crm-p) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: background 0.18s ease !important;
+  border-radius: 7px !important;
+}
+.sidebar-header:hover {
+  background: #5f4ee8 !important;
+}
+.sidebar-header .header-title {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.1px !important;
+}
+.sidebar-header .header-subtitle {
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.sidebar-header .icon-container {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-radius: 7px !important;
+}
+.sidebar-header .drop-icon svg,
+.sidebar-header svg {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.navbar-search-bar .item-anchor,
+.sidebar-notification .item-anchor {
+  color: #64637e !important;
+  border-radius: 7px !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
+}
+.navbar-search-bar .item-anchor:hover,
+.sidebar-notification .item-anchor:hover {
+  background: rgba(112, 92, 255, 0.07) !important;
+  color: var(--crm-p) !important;
+}
+.navbar-search-bar .sidebar-item-icon svg,
+.sidebar-notification .sidebar-item-icon svg {
+  color: inherit !important;
+  transition: color 0.14s ease !important;
+}
+.sidebar-item-suffix.keyboard-shortcut {
+  background: #EDEAF8 !important;
+  color: var(--crm-lav) !important;
+  font-size: 10px !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  font-family: monospace !important;
+}
+
+.standard-sidebar-item a.item-anchor {
+  color: #64637e !important;
+  border-radius: 7px !important;
+  font-size: 12.5px !important;
+  letter-spacing: -0.1px !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
+}
+.standard-sidebar-item .sidebar-item-icon svg {
+  color: inherit !important;
+  transition: color 0.14s ease !important;
+}
+.standard-sidebar-item a.item-anchor:hover {
+  background: rgba(112, 92, 255, 0.07) !important;
+  color: var(--crm-p) !important;
+}
+.standard-sidebar-item.active-sidebar > a.item-anchor {
+  background: rgba(112, 92, 255, 0.1) !important;
+  color: var(--crm-p) !important;
+  font-weight: 600 !important;
+  position: relative;
+}
+.standard-sidebar-item.active-sidebar > a.item-anchor::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 17px;
+  background: var(--crm-p);
+  border-radius: 0 3px 3px 0;
+}
+
+.body-sidebar .sidebar-section-title,
+.body-sidebar .module-title {
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  color: var(--crm-lav) !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+}
+
+.body-sidebar-bottom {
+  border-top: 1px solid var(--crm-srf) !important;
+}
+
+.collapse-sidebar-link {
+  color: var(--crm-lav) !important;
+  font-size: 12px !important;
+  border-radius: 7px !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
+}
+.collapse-sidebar-link:hover {
+  background: rgba(165, 143, 255, 0.08) !important;
+  color: var(--crm-p) !important;
+}
+
+.dropdown-navbar-user .sidebar-user-button {
+  border-radius: 8px !important;
+  transition: background 0.14s ease !important;
+}
+.dropdown-navbar-user .sidebar-user-button:hover {
+  background: rgba(112, 92, 255, 0.07) !important;
+}
+.avatar-frame.standard-image {
+  background: var(--crm-p) !important;
+  color: #ffffff !important;
+}
+.sidebar-user-button .avatar-name-email .user-fullname,
+.sidebar-user-button .avatar-name-email > span:first-child {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #2a2a38 !important;
+  letter-spacing: -0.1px !important;
+}
+.sidebar-user-button .avatar-name-email .text-secondary,
+.sidebar-user-button .avatar-name-email > span:last-child {
+  font-size: 10.5px !important;
+  color: var(--crm-lav) !important;
+}
+
+
+/* ─────────────────────────────────────────
+   CONTEXT MENU — LIGHT
+   Targets exact: .frappe-menu.context-menu
+───────────────────────────────────────── */
+
+.frappe-menu.context-menu {
+  background: #ffffff !important;
+  border: 1px solid #E2E2EC !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(112, 92, 255, 0.1),
+              0 1px 4px rgba(0, 0, 0, 0.06) !important;
+  padding: 5px !important;
+  min-width: 200px !important;
+  overflow: hidden !important;
+}
+
+.frappe-menu.context-menu .dropdown-menu-item > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  padding: 8px 10px !important;
+  border-radius: 7px !important;
+  color: #52526a !important;
+  font-size: 12.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.1px !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: background 0.13s ease, color 0.13s ease !important;
+}
+.frappe-menu.context-menu .dropdown-menu-item > a:hover {
+  background: rgba(112, 92, 255, 0.07) !important;
+  color: var(--crm-p) !important;
+}
+
+.frappe-menu.context-menu .dropdown-menu-item > a .menu-item-icon {
+  width: 16px !important;
+  height: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  color: inherit !important;
+}
+.frappe-menu.context-menu .dropdown-menu-item > a .menu-item-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+  color: inherit !important;
+  transition: color 0.13s ease !important;
+}
+.frappe-menu.context-menu .dropdown-menu-item > a .menu-item-icon:last-child {
+  margin-left: auto !important;
+  opacity: 0.35 !important;
+}
+
+.frappe-menu.context-menu .menu-item-title {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.1px !important;
+  color: inherit !important;
+  flex: 1 !important;
+}
+
+.frappe-menu.context-menu .dropdown-divider {
+  height: 1px !important;
+  background: #ECEAF5 !important;
+  border: none !important;
+  margin: 4px 0 !important;
+}
+
+/* Logout + Delete Demo — danger tint */
+.frappe-menu.context-menu .dropdown-menu-item:has(.menu-item-title:contains("Logout")) > a,
+.frappe-menu.context-menu .dropdown-menu-item:last-child > a,
+.frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a {
+  color: #b83232 !important;
+  height: 2px !important;
+}
+.frappe-menu.context-menu .dropdown-menu-item:last-child > a:hover,
+.frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a:hover {
+  background: rgba(184, 50, 50, 0.06) !important;
+  color: #b83232 !important;
+}
+
+
+/* ─────────────────────────────────────────
+   DARK MODE  [data-theme="dark"]
+───────────────────────────────────────── */
+
+[data-theme="dark"] .body-sidebar {
+  background: #15131F !important;
+  border-right: 1px solid rgba(112, 92, 255, 0.16) !important;
+}
+
+[data-theme="dark"] .sidebar-header {
+  background: #1E1A30 !important;
+  border-bottom: 1px solid rgba(112, 92, 255, 0.12) !important;
+  border-radius: 7px !important;
+}
+[data-theme="dark"] .sidebar-header:hover {
+  background: #241f3a !important;
+}
+[data-theme="dark"] .sidebar-header .header-title {
+  color: #E8E8EF !important;
+}
+[data-theme="dark"] .sidebar-header .header-subtitle {
+  color: rgba(165, 143, 255, 0.5) !important;
+}
+[data-theme="dark"] .sidebar-header .icon-container {
+  background: rgba(112, 92, 255, 0.22) !important;
+}
+[data-theme="dark"] .sidebar-header .drop-icon svg,
+[data-theme="dark"] .sidebar-header svg {
+  color: rgba(165, 143, 255, 0.35) !important;
+}
+
+[data-theme="dark"] .standard-sidebar-item a.item-anchor,
+[data-theme="dark"] .navbar-search-bar .item-anchor,
+[data-theme="dark"] .sidebar-notification .item-anchor {
+  color: #7c7998 !important;
+}
+[data-theme="dark"] .standard-sidebar-item a.item-anchor:hover,
+[data-theme="dark"] .navbar-search-bar .item-anchor:hover,
+[data-theme="dark"] .sidebar-notification .item-anchor:hover {
+  background: rgba(90, 188, 249, 0.07) !important;
+  color: var(--crm-sky) !important;
+}
+[data-theme="dark"] .standard-sidebar-item.active-sidebar > a.item-anchor {
+  background: rgba(112, 92, 255, 0.18) !important;
+  color: #E8E8EF !important;
+}
+[data-theme="dark"] .standard-sidebar-item.active-sidebar > a.item-anchor::before {
+  background: var(--crm-p) !important;
+}
+
+[data-theme="dark"] .body-sidebar .sidebar-section-title,
+[data-theme="dark"] .body-sidebar .module-title {
+  color: rgba(112, 92, 255, 0.65) !important;
+}
+
+[data-theme="dark"] .sidebar-item-suffix.keyboard-shortcut {
+  background: rgba(165, 143, 255, 0.1) !important;
+  color: var(--crm-lav) !important;
+}
+
+[data-theme="dark"] .body-sidebar-bottom {
+  border-top: 1px solid rgba(112, 92, 255, 0.13) !important;
+}
+
+[data-theme="dark"] .collapse-sidebar-link {
+  color: rgba(165, 143, 255, 0.38) !important;
+}
+[data-theme="dark"] .collapse-sidebar-link:hover {
+  background: rgba(112, 92, 255, 0.1) !important;
+  color: var(--crm-lav) !important;
+}
+
+[data-theme="dark"] .avatar-frame.standard-image {
+  background: rgba(112, 92, 255, 0.28) !important;
+  color: var(--crm-lav) !important;
+}
+[data-theme="dark"] .sidebar-user-button .avatar-name-email .user-fullname,
+[data-theme="dark"] .sidebar-user-button .avatar-name-email > span:first-child {
+  color: #E8E8EF !important;
+}
+[data-theme="dark"] .sidebar-user-button .avatar-name-email .text-secondary,
+[data-theme="dark"] .sidebar-user-button .avatar-name-email > span:last-child {
+  color: rgba(112, 92, 255, 0.65) !important;
+}
+[data-theme="dark"] .sidebar-user-button:hover {
+  background: rgba(112, 92, 255, 0.1) !important;
+}
+
+
+/* ─────────────────────────────────────────
+   CONTEXT MENU — DARK
+───────────────────────────────────────── */
+
+[data-theme="dark"] .frappe-menu.context-menu {
+  background: #1C1929 !important;
+  border: 1px solid rgba(112, 92, 255, 0.2) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
+              0 1px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item > a {
+  color: #8a87a8 !important;
+}
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item > a:hover {
+  background: rgba(112, 92, 255, 0.13) !important;
+  color: var(--crm-lav) !important;
+}
+
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-divider {
+  background: rgba(112, 92, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item:last-child > a,
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a {
+  color: #e07878 !important;
+}
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item:last-child > a:hover,
+[data-theme="dark"] .frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a:hover {
+  background: rgba(224, 120, 120, 0.09) !important;
+  color: #e07878 !important;
+}

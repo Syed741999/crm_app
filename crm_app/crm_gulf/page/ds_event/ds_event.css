@@ -176,6 +176,7 @@
   border: 1px solid var(--hair);
   border-radius: var(--r);
   box-shadow: var(--sh1);
+  
 }
 
 /* nav row inside card */
@@ -745,6 +746,13 @@
     padding: 12px 10px 80px;
   }
 
+  .dse-cal-card {
+  width:368px;
+  }
+
+  .dse-hour-slot{
+    width:300px;
+  }
   /* Topbar: stack into 2 rows */
   .dse-topbar {
     flex-direction: column;
@@ -819,6 +827,7 @@
   .dse-hour-label { width: 46px; font-size: 9px; }
   .dse-hour-event-name { font-size: 11px; }
   .dse-hour-event-meta { font-size: 9.5px; }
+  .dse-hour-event-notes { font-size: 7px;}
 
   /* Upcoming card */
   .dse-upcoming-card { padding: 13px; }

@@ -25,7 +25,7 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/crm_app/css/crm_app.css"
+# app_include_css = "/assets/crm_app/css/theme.css"
 # app_include_js = "/assets/crm_app/js/crm_app.js"
 
 # include js, css files in header of web template
@@ -252,16 +252,18 @@ app_license = "mit"
 
 # Fixtures
 # --------
-fixtures = [
-	"Page"
-]
+# fixtures = [
+# 	"Page"
+# ]
 
-# In /home/syed/frappe-bench/apps/crm_app/crm_app/hooks.py
+# # In /home/syed/frappe-bench/apps/crm_app/crm_app/hooks.py
 
-page_js = {
-    # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.js"
-}
+# page_js = {
+#     # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.js"
+# }
 
-page_css = {
-    # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.css"
-}
+# page_css = {
+#     # "ds-crm": "crm_gulf/page/ds_crm/ds_crm.css"
+# }
+
+app_include_css = ["assets/crm_app/css/sidebar_theme.css"]

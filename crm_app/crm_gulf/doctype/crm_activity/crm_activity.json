@@ -10,6 +10,7 @@
   "logged_by",
   "activity_type",
   "follow_up_action",
+  "is_completed",
   "column_break_1",
   "enquiry",
   "lead",
@@ -116,15 +117,22 @@
    "fieldtype": "Text Editor",
    "label": "Outcome / Notes",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_completed",
+   "fieldtype": "Check",
+   "label": "Completed (Follow Up)"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-04 02:14:26.463144",
+ "modified": "2026-04-07 13:23:20.178563",
  "modified_by": "Administrator",
  "module": "CRM GULF",
  "name": "CRM Activity",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

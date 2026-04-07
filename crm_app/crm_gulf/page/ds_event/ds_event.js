@@ -11,13 +11,38 @@ frappe.pages['ds-event'].on_page_load = function (wrapper) {
 		frappe.require('/assets/crm_app/css/ds_event.css');
 
 		// ── SCROLL FIX: reset scroll every time this page is shown ──────────
-		$(wrapper).on('show', function () {
-			var pageBody = $(wrapper).find('.page-content')[0];
-			if (pageBody) pageBody.scrollTop = 0;
-			// Also reset main window scroll
-			var layout = document.querySelector('.layout-main-section');
-			if (layout) layout.scrollTop = 0;
-		});
+		// $(wrapper).on('show', function () {
+		// 	var pageBody = $(wrapper).find('.page-content')[0];
+		// 	if (pageBody) pageBody.scrollTop = 0;
+		// 	// Also reset main window scroll
+		// 	var layout = document.querySelector('.layout-main-section');
+		// 	if (layout) layout.scrollTop = 0;
+		// });
+
+		// ── SCROLL FIX ───────────────────────────────────────────────────────
+// ── SCROLL FIX ───────────────────────────────────────────────────────
+function applyScrollFix() {
+    var pageContent = $(wrapper).find('.page-content')[0];
+    if (pageContent) {
+        pageContent.style.setProperty('overflow',   'visible', 'important');
+        pageContent.style.setProperty('height',     'auto',    'important');
+        pageContent.style.setProperty('max-height', 'none',    'important');
+        pageContent.style.setProperty('min-height', '0',       'important');
+    }
+    var pageBody = $(wrapper).find('.page-body')[0];
+    if (pageBody) {
+        pageBody.style.setProperty('overflow',   'visible', 'important');
+        pageBody.style.setProperty('height',     'auto',    'important');
+        pageBody.style.setProperty('max-height', 'none',    'important');
+    }
+}
+
+applyScrollFix();
+$(wrapper).on('show', function () {
+    applyScrollFix();
+    setTimeout(applyScrollFix, 100);
+    setTimeout(applyScrollFix, 400);
+});
 
 		var mount = document.createElement('div');
 		mount.id = 'ds-event-root';

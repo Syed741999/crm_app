@@ -11,12 +11,39 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 		frappe.require('/assets/crm_app/css/ds_crm.css');
 
 		// ── SCROLL FIX ───────────────────────────────────────────────────────
-		$(wrapper).on('show', function () {
-			var layout = document.querySelector('.layout-main-section');
-			if (layout) layout.scrollTop = 0;
-			var pc = $(wrapper).find('.page-content')[0];
-			if (pc) pc.scrollTop = 0;
-		});
+
+// ── SCROLL FIX ───────────────────────────────────────────────────────
+function applyScrollFix() {
+    // DO NOT touch the sidebar or navbar — only fix the content area
+    var layoutMain = document.querySelector('.layout-main-section');
+    if (layoutMain) {
+        layoutMain.style.setProperty('overflow-y', 'auto',    'important');
+        layoutMain.style.setProperty('overflow-x', 'hidden',  'important');
+        layoutMain.style.setProperty('height',     '100vh',   'important');
+        layoutMain.style.setProperty('max-height', '100vh',   'important');
+    }
+
+    var wrapper2 = document.querySelector('.layout-main-section-wrapper');
+    if (wrapper2) {
+        wrapper2.style.setProperty('overflow',   'visible', 'important');
+        wrapper2.style.setProperty('height',     'auto',    'important');
+        wrapper2.style.setProperty('max-height', 'none',    'important');
+    }
+
+    var pageContent = $(wrapper).find('.page-content')[0];
+    if (pageContent) {
+        pageContent.style.setProperty('overflow',   'visible', 'important');
+        pageContent.style.setProperty('height',     'auto',    'important');
+        pageContent.style.setProperty('max-height', 'none',    'important');
+    }
+}
+
+applyScrollFix();
+$(wrapper).on('show', function () {
+    applyScrollFix();
+    setTimeout(applyScrollFix, 100);
+    setTimeout(applyScrollFix, 400);
+});
 
 		var mount = document.createElement('div');
 		mount.id = 'ds-crm-root';
@@ -173,6 +200,7 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 			template: `
 				<div :class="'ds-drawer'+(open?' open':'')" :id="drawerId">
 					<div class="ds-drawer-header">
+					    <div class="ds-sheet-handle"></div>
 						<div class="ds-drawer-title">
 							<span class="ds-drawer-icon">{{ icon }}</span>{{ title }}
 						</div>
@@ -446,67 +474,89 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 
 		// ── DRAWER: EDIT FOLLOW-UP ────────────────────────────────────────────
 		var DrawerEditFollowupComp = {
-			name: 'DrawerEditFollowup',
-			components: { Drawer:DrawerComp },
-			props: { open:{type:Boolean,default:false}, activity:{type:Object,default:null} },
-			emits: ['close','toast','refresh'],
-			data: function() {
-				return { saving:false, form:{ subject:'', date:'', notes:'' } };
-			},
-			watch: {
-				open: function(v) {
-					if(v && this.activity){
-						this.form = {
-							subject: stripHtml(this.activity.follow_up_action||''),
-							date:    this.activity.activity_date||frappe.datetime.get_today(),
-							notes:   stripHtml(this.activity.outcome_notes||''),
-						};
-					} else if(!v) {
-						this.form = { subject:'', date:'', notes:'' };
-					}
-				},
-			},
-			computed: {
-				linkedLabel: function() {
-					var act = this.activity||{};
-					return act._resolvedLabel||act.enquiry||act.lead||'—';
-				},
-			},
-			methods: {
-				save: function() {
-					var self = this;
-					if(!self.form.subject.trim()){ self.$emit('toast',{msg:'Subject is required',type:'error'}); return; }
-					if(!self.form.date){           self.$emit('toast',{msg:'Date is required',type:'error'}); return; }
-					self.saving=true;
-					frappe.call({
-						method:'frappe.client.set_value',
-						args:{ doctype:'CRM Activity', name:self.activity.name,
-							fieldname:{ follow_up_action:self.form.subject.trim(), activity_date:self.form.date, outcome_notes:self.form.notes.trim() } },
-						callback:function(r){
-							self.saving=false;
-							if(r.message){ self.$emit('toast',{msg:'Follow-up updated!',type:'success'}); self.$emit('close'); self.$emit('refresh'); }
-						},
-						error:function(){ self.saving=false; self.$emit('toast',{msg:'Failed to update.',type:'error'}); },
-					});
-				},
-			},
-			template: `
-				<Drawer draw-id="drawer-editfollowup" :open="open" icon="✏️" title="Edit Follow-up" save-label="Save Changes" :saving="saving" @close="$emit('close')" @save="save">
-					<div class="ds-field"><label class="ds-label">Subject <span class="ds-req">*</span></label>
-						<input class="ds-input" v-model="form.subject" placeholder="e.g. Send proposal"/>
-					</div>
-					<div class="ds-field"><label class="ds-label">Enquiry / Lead</label>
-						<input class="ds-input" :value="linkedLabel" readonly style="background:var(--bg2);cursor:default;color:var(--muted)"/>
-					</div>
-					<div class="ds-field"><label class="ds-label">New Date <span class="ds-req">*</span></label>
-						<input class="ds-input" type="date" v-model="form.date"/>
-					</div>
-					<div class="ds-field"><label class="ds-label">Notes</label>
-						<textarea class="ds-textarea" v-model="form.notes" placeholder="What happened? What was agreed?" style="min-height:90px"></textarea>
-					</div>
-				</Drawer>
-			`,
-		};
+    name: 'DrawerEditFollowup',
+    components: { Drawer:DrawerComp },
+    props: { open:{type:Boolean,default:false}, activity:{type:Object,default:null} },
+    emits: ['close','toast','refresh'],
+    data: function() {
+        return { saving:false, form:{ subject:'', date:'', notes:'', is_completed:0 } };
+    },
+    watch: {
+        open: function(v) {
+            if(v && this.activity){
+                this.form = {
+                    subject:      stripHtml(this.activity.follow_up_action||''),
+                    date:         this.activity.activity_date||frappe.datetime.get_today(),
+                    notes:        stripHtml(this.activity.outcome_notes||''),
+                    is_completed: this.activity.is_completed ? 1 : 0,
+                };
+            } else if(!v) {
+                this.form = { subject:'', date:'', notes:'', is_completed:0 };
+            }
+        },
+    },
+    computed: {
+        linkedLabel: function() {
+            var act = this.activity||{};
+            return act._resolvedLabel||act.enquiry||act.lead||'—';
+        },
+    },
+    methods: {
+        save: function() {
+            var self = this;
+            if(!self.form.subject.trim()){ self.$emit('toast',{msg:'Subject is required',type:'error'}); return; }
+            if(!self.form.date){           self.$emit('toast',{msg:'Date is required',type:'error'}); return; }
+            self.saving=true;
+            frappe.call({
+                method:'frappe.client.set_value',
+                args:{ doctype:'CRM Activity', name:self.activity.name,
+                    fieldname:{
+                        follow_up_action: self.form.subject.trim(),
+                        activity_date:    self.form.date,
+                        outcome_notes:    self.form.notes.trim(),
+                        is_completed:     self.form.is_completed,
+                    }
+                },
+                callback:function(r){
+                    self.saving=false;
+                    if(r.message){
+                        var msg = self.form.is_completed ? 'Follow-up marked as completed!' : 'Follow-up updated!';
+                        self.$emit('toast',{msg:msg,type:'success'});
+                        self.$emit('close');
+                        self.$emit('refresh');
+                    }
+                },
+                error:function(){ self.saving=false; self.$emit('toast',{msg:'Failed to update.',type:'error'}); },
+            });
+        },
+    },
+    template: `
+        <Drawer draw-id="drawer-editfollowup" :open="open" icon="✏️" title="Edit Follow-up" save-label="Save Changes" :saving="saving" @close="$emit('close')" @save="save">
+            <div class="ds-field"><label class="ds-label">Subject <span class="ds-req">*</span></label>
+                <input class="ds-input" v-model="form.subject" placeholder="e.g. Send proposal"/>
+            </div>
+            <div class="ds-field"><label class="ds-label">Enquiry / Lead</label>
+                <input class="ds-input" :value="linkedLabel" readonly style="background:var(--bg2);cursor:default;color:var(--muted)"/>
+            </div>
+            <div class="ds-field"><label class="ds-label">New Date <span class="ds-req">*</span></label>
+                <input class="ds-input" type="date" v-model="form.date"/>
+            </div>
+            <div class="ds-field"><label class="ds-label">Notes</label>
+                <textarea class="ds-textarea" v-model="form.notes" placeholder="What happened? What was agreed?" style="min-height:90px"></textarea>
+            </div>
+            <div class="ds-field">
+                <label class="ds-completed-wrap">
+                    <input type="checkbox" class="ds-completed-cb" :checked="form.is_completed===1" @change="form.is_completed=$event.target.checked?1:0"/>
+                    <span class="ds-completed-box" :class="form.is_completed===1?'checked':''">
+                        <svg v-if="form.is_completed===1" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span class="ds-completed-label" :class="form.is_completed===1?'done':''">Completed (Follow Up)</span>
+                </label>
+                <div v-if="form.is_completed===1" class="ds-completed-hint">This follow-up will be removed from the Needs Chasing list.</div>
+            </div>
+        </Drawer>
+    `,
+};
 
 		// ── ON DECK SECTION ───────────────────────────────────────────────────
 		var OnDeckSectionComp = {
@@ -592,96 +642,102 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 			`,
 		};
 
-		// ── NEEDS CHASING SECTION ─────────────────────────────────────────────
 		var NeedsChasingSectionComp = {
-			name: 'NeedsChasingSection',
-			props: { refreshAt:{type:Number,default:0} },
-			emits: ['edit'],
-			data: function() {
-				return { activities:[], loading:true, labels:{} };
-			},
-			watch: {
-				refreshAt: function() { this.load(); },
-			},
-			mounted: function() { this.load(); },
-			methods: {
-				
-				load: function() {
-					var self = this;
-					self.loading = true;
-					var today = frappe.datetime.get_today();
-					frappe.call({
-						method:'frappe.client.get_list',
-						args:{ doctype:'CRM Activity', filters:[['logged_by','=',frappe.session.user],['activity_date','<',today],['follow_up_action','!=',''],['follow_up_action','is','set']],
-							fields:['name','activity_date','follow_up_action','enquiry','lead','outcome_notes'], order_by:'activity_date asc', limit_page_length:0 },
-						callback:function(r){
-							var acts = r.message||[];
-							self.activities = acts;
-							self.loading = false;
-							self.resolveLabels(acts);
-						},
-					});
-				},
-				resolveLabels: function(acts) {
-					var self = this;
-					var enquiryIds=[], leadIds=[];
-					acts.forEach(function(a){
-						if(a.enquiry && enquiryIds.indexOf(a.enquiry)===-1) enquiryIds.push(a.enquiry);
-						if(a.lead    && leadIds.indexOf(a.lead)===-1)       leadIds.push(a.lead);
-					});
-					var resolved={}, pending=(enquiryIds.length>0?1:0)+(leadIds.length>0?1:0);
-					if(pending===0){ self.labels={}; return; }
-					function done(){ pending--; if(pending<=0) self.labels=Object.assign({},resolved); }
-					if(enquiryIds.length){
-						frappe.call({ method:'frappe.client.get_list', args:{ doctype:'CRM Enquiry', filters:[['name','in',enquiryIds]], fields:['name','title'], limit_page_length:0 },
-							callback:function(r2){ (r2.message||[]).forEach(function(e){ resolved[e.name]=e.title; }); done(); } });
-					}
-					if(leadIds.length){
-						frappe.call({ method:'frappe.client.get_list', args:{ doctype:'CRM Lead', filters:[['name','in',leadIds]], fields:['name','full_name','company'], limit_page_length:0 },
-							callback:function(r2){ (r2.message||[]).forEach(function(e){ resolved[e.name]=e.full_name+(e.company?' · '+e.company:''); }); done(); } });
-					}
-				},
-				getLabel: function(act) {
-					return (act.enquiry?this.labels[act.enquiry]:null)||(act.lead?this.labels[act.lead]:null)||'';
-				},
-				daysDiff: function(ds) {
-					var today=new Date(); today.setHours(0,0,0,0);
-					var then=new Date(ds); then.setHours(0,0,0,0);
-					return Math.round((today-then)/86400000);
-				},
-				onEdit: function(act) {
-					var sub = this.getLabel(act);
-					this.$emit('edit', Object.assign({},act,{_resolvedLabel:sub}));
-				},
-			},
-			template: `
-				<div class="ds-sec-card">
-					<div class="ds-sec-hdr">
-						<span class="ds-sec-ttl ds-sec-ttl-amb">Needs Chasing</span>
-						<div class="ds-sec-rule"></div>
-						<span class="ds-sec-badge ds-sec-badge-amb">{{ activities.length }}</span>
-					</div>
-					<div v-if="loading" class="ds-empty">Loading…</div>
-					<div v-else-if="!activities.length" class="ds-empty">✓ Nothing overdue.</div>
-					<div v-for="act in activities" :key="act.name" class="ds-chase-row">
-						<div class="ds-chase-days">
-							<span class="ds-chase-days-num">{{ daysDiff(act.activity_date) }}</span>
-							<span class="ds-chase-days-lbl">days</span>
-						</div>
-						<div class="ds-chase-body">
-							<div class="ds-chase-title">{{ act.follow_up_action }}</div>
-							<div v-if="getLabel(act)" class="ds-chase-sub">{{ getLabel(act) }}</div>
-						</div>
-						<button class="ds-chase-edit" title="Edit follow-up" @click="onEdit(act)">
-							<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-								<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-								<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-							</svg>
-						</button>
-					</div>
-				</div>
-			`,
-		};
+    name: 'NeedsChasingSection',
+    props: { refreshAt:{type:Number,default:0} },
+    emits: ['edit'],
+    data: function() {
+        return { activities:[], loading:true, labels:{} };
+    },
+    watch: {
+        refreshAt: function() { this.load(); },
+    },
+    mounted: function() { this.load(); },
+    methods: {
+        load: function() {
+            var self = this;
+            self.loading = true;
+            var today = frappe.datetime.get_today();
+            frappe.call({
+                method:'frappe.client.get_list',
+                args:{ doctype:'CRM Activity',
+                    filters:[
+                        ['logged_by','=',frappe.session.user],
+                        ['activity_date','<',today],
+                        ['follow_up_action','!=',''],
+                        ['follow_up_action','is','set'],
+                        ['is_completed','!=',1],
+                    ],
+                    fields:['name','activity_date','follow_up_action','enquiry','lead','outcome_notes','is_completed'],
+                    order_by:'activity_date asc', limit_page_length:0 },
+                callback:function(r){
+                    var acts = r.message||[];
+                    self.activities = acts;
+                    self.loading = false;
+                    self.resolveLabels(acts);
+                },
+            });
+        },
+        resolveLabels: function(acts) {
+            var self = this;
+            var enquiryIds=[], leadIds=[];
+            acts.forEach(function(a){
+                if(a.enquiry && enquiryIds.indexOf(a.enquiry)===-1) enquiryIds.push(a.enquiry);
+                if(a.lead    && leadIds.indexOf(a.lead)===-1)       leadIds.push(a.lead);
+            });
+            var resolved={}, pending=(enquiryIds.length>0?1:0)+(leadIds.length>0?1:0);
+            if(pending===0){ self.labels={}; return; }
+            function done(){ pending--; if(pending<=0) self.labels=Object.assign({},resolved); }
+            if(enquiryIds.length){
+                frappe.call({ method:'frappe.client.get_list', args:{ doctype:'CRM Enquiry', filters:[['name','in',enquiryIds]], fields:['name','title'], limit_page_length:0 },
+                    callback:function(r2){ (r2.message||[]).forEach(function(e){ resolved[e.name]=e.title; }); done(); } });
+            }
+            if(leadIds.length){
+                frappe.call({ method:'frappe.client.get_list', args:{ doctype:'CRM Lead', filters:[['name','in',leadIds]], fields:['name','full_name','company'], limit_page_length:0 },
+                    callback:function(r2){ (r2.message||[]).forEach(function(e){ resolved[e.name]=e.full_name+(e.company?' · '+e.company:''); }); done(); } });
+            }
+        },
+        getLabel: function(act) {
+            return (act.enquiry?this.labels[act.enquiry]:null)||(act.lead?this.labels[act.lead]:null)||'';
+        },
+        daysDiff: function(ds) {
+            var today=new Date(); today.setHours(0,0,0,0);
+            var then=new Date(ds); then.setHours(0,0,0,0);
+            return Math.round((today-then)/86400000);
+        },
+        onEdit: function(act) {
+            var sub = this.getLabel(act);
+            this.$emit('edit', Object.assign({},act,{_resolvedLabel:sub}));
+        },
+    },
+    template: `
+        <div class="ds-sec-card">
+            <div class="ds-sec-hdr">
+                <span class="ds-sec-ttl ds-sec-ttl-amb">Needs Chasing</span>
+                <div class="ds-sec-rule"></div>
+                <span class="ds-sec-badge ds-sec-badge-amb">{{ activities.length }}</span>
+            </div>
+            <div v-if="loading" class="ds-empty">Loading…</div>
+            <div v-else-if="!activities.length" class="ds-empty">✓ Nothing overdue.</div>
+            <div v-for="act in activities" :key="act.name" class="ds-chase-row">
+                <div class="ds-chase-days">
+                    <span class="ds-chase-days-num">{{ daysDiff(act.activity_date) }}</span>
+                    <span class="ds-chase-days-lbl">days</span>
+                </div>
+                <div class="ds-chase-body">
+                    <div class="ds-chase-title">{{ act.follow_up_action }}</div>
+                    <div v-if="getLabel(act)" class="ds-chase-sub">{{ getLabel(act) }}</div>
+                </div>
+                <button class="ds-chase-edit" title="Edit follow-up" @click="onEdit(act)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `,
+};
 
 		// ── ENQUIRY DETAIL PANEL ──────────────────────────────────────────────
 		var EnquiryDetailPanelComp = {
@@ -800,106 +856,326 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 				</div>
 			`,
 		};
+  
+    var MyBriefBoardComp = {
+    name: 'MyBriefBoard',
+    components: { EnquiryDetailPanel:EnquiryDetailPanelComp },
+    props: { refreshAt:{type:Number,default:0} },
+    emits: ['toast','refresh'],
+    data: function() {
+        return {
+            enquiries:[], loading:true, userNames:{},
+            selEnq:null, panelOpen:false,
+            viewMode: 'brief',
+            kanbanEnquiries:[], kanbanLoading:false,
+            draggedEnq: null,
+            dragOverStage: null,
+            movingEnq: null,
+        };
+    },
+    watch: {
+        refreshAt: function() {
+            this.load();
+            if(this.viewMode === 'kanban') this.loadKanban();
+        },
+    },
+    mounted: function() { this.load(); },
+    methods: {
+        goFullView: function() { frappe.set_route('crm-enquiry'); },
+        switchView: function(mode) {
+            this.viewMode = mode;
+            if(mode === 'kanban' && !this.kanbanEnquiries.length) this.loadKanban();
+        },
+        load: function() {
+            var self = this;
+            self.loading = true;
+            frappe.call({
+                method:'frappe.client.get_list',
+                args:{ doctype:'CRM Enquiry', filters:[['assigned_to','=',frappe.session.user]],
+                    fields:['name','title','stage','value','days_in_stage','assigned_to','last_activity_date','stage_changed_on','notes'],
+                    order_by:'days_in_stage desc', limit_page_length:0 },
+                callback:function(r){
+                    var rows = r.message||[];
+                    self.enquiries = rows;
+                    self.loading = false;
+                    self.resolveUserNames(rows);
+                },
+            });
+        },
+        loadKanban: function() {
+            var self = this;
+            self.kanbanLoading = true;
+            frappe.call({
+                method:'frappe.client.get_list',
+                args:{ doctype:'CRM Enquiry',
+                    filters:[['assigned_to','=',frappe.session.user]],
+                    fields:['name','title','stage','value','days_in_stage','assigned_to','last_activity_date','notes'],
+                    order_by:'days_in_stage desc', limit_page_length:0 },
+                callback:function(r){
+                    var rows = r.message||[];
+                    self.kanbanEnquiries = rows;
+                    self.kanbanLoading = false;
+                    self.resolveUserNames(rows);
+                },
+            });
+        },
+        resolveUserNames: function(rows) {
+            var self = this;
+            var uids=[];
+            rows.forEach(function(e){ if(e.assigned_to && uids.indexOf(e.assigned_to)===-1) uids.push(e.assigned_to); });
+            if(uids.length){
+                frappe.call({ method:'frappe.client.get_list', args:{ doctype:'User', filters:[['name','in',uids]], fields:['name','full_name'], limit_page_length:0 },
+                    callback:function(r2){
+                        var map = Object.assign({}, self.userNames);
+                        (r2.message||[]).forEach(function(u){ map[u.name]=u.full_name.split(' ')[0]; });
+                        self.userNames = map;
+                    },
+                });
+            }
+        },
+        // Brief board helpers
+        getTopCard: function(stage) {
+            var matching = this.enquiries.filter(function(e){ return e.stage===stage; });
+            return matching.length ? matching[0] : null;
+        },
+        countForStage: function(stage) {
+            return this.enquiries.filter(function(e){ return e.stage===stage; }).length;
+        },
+        // Kanban helpers
+        kanbanCardsForStage: function(stage) {
+            return this.kanbanEnquiries.filter(function(e){ return e.stage===stage; });
+        },
+        kanbanCountForStage: function(stage) {
+            return this.kanbanEnquiries.filter(function(e){ return e.stage===stage; }).length;
+        },
+        openPanel: function(enq) {
+            if(this.draggedEnq) return; // don't open panel if we were dragging
+            this.selEnq = Object.assign({},enq,{_assignedName:this.userNames[enq.assigned_to]||enq.assigned_to});
+            this.panelOpen = true;
+        },
 
-		// ── MY BRIEF BOARD ────────────────────────────────────────────────────
-		var MyBriefBoardComp = {
-			name: 'MyBriefBoard',
-			components: { EnquiryDetailPanel:EnquiryDetailPanelComp },
-			props: { refreshAt:{type:Number,default:0} },
-			emits: ['toast','refresh'],
-			data: function() {
-				return { enquiries:[], loading:true, userNames:{}, selEnq:null, panelOpen:false };
-			},
-			watch: {
-				refreshAt: function() { this.load(); },
-			},
-			mounted: function() { this.load(); },
-			methods: {
-				goFullView: function() { frappe.set_route('crm-enquiry'); },
-				load: function() {
-					var self = this;
-					self.loading = true;
-					frappe.call({
-						method:'frappe.client.get_list',
-						args:{ doctype:'CRM Enquiry', filters:[['assigned_to','=',frappe.session.user]],
-							fields:['name','title','stage','value','days_in_stage','assigned_to','last_activity_date','stage_changed_on','notes'],
-							order_by:'days_in_stage desc', limit_page_length:0 },
-						callback:function(r){
-							var rows = r.message||[];
-							self.enquiries = rows;
-							self.loading = false;
-							var uids=[];
-							rows.forEach(function(e){ if(e.assigned_to && uids.indexOf(e.assigned_to)===-1) uids.push(e.assigned_to); });
-							if(uids.length){
-								frappe.call({ method:'frappe.client.get_list', args:{ doctype:'User', filters:[['name','in',uids]], fields:['name','full_name'], limit_page_length:0 },
-									callback:function(r2){
-										var map={};
-										(r2.message||[]).forEach(function(u){ map[u.name]=u.full_name.split(' ')[0]; });
-										self.userNames=map;
-									},
-								});
-							}
-						},
-					});
-				},
-				getTopCard: function(stage) {
-					var matching = this.enquiries.filter(function(e){ return e.stage===stage; });
-					return matching.length ? matching[0] : null;
-				},
-				countForStage: function(stage) {
-					return this.enquiries.filter(function(e){ return e.stage===stage; }).length;
-				},
-				openPanel: function(enq) {
-					this.selEnq = Object.assign({},enq,{_assignedName:this.userNames[enq.assigned_to]||enq.assigned_to});
-					this.panelOpen = true;
-				},
-				fmtVal: fmtVal,
-				daysDotColor: daysDotColor,
-				stageClass: stageClass,
-			},
-			template: `
-				<div>
-					<div class="ds-board-wrap">
-						<div class="ds-sec-hdr" style="margin-bottom:14px">
-							<span class="ds-sec-ttl">My Brief Board</span>
-							<div class="ds-sec-rule"></div>
-							<button class="g-btn g-btn-ghost" style="padding:4px 10px;font-size:11.5px" @click="goFullView">Full view</button>
-						</div>
-						<div v-if="loading" class="ds-empty">Loading…</div>
-						<div v-else class="ds-board-scroll">
-							<div class="ds-kb-board">
-								<div v-for="stage in ['New Lead','Qualified','Proposal','Negotiation','Won','Lost']" :key="stage" class="ds-kb-col">
-									<div :class="'ds-kb-col-hdr '+stageClass(stage)">
-										<span class="ds-kb-col-name">{{ stage }}</span>
-										<span class="ds-kb-col-cnt">{{ countForStage(stage) }}</span>
-									</div>
-									<div v-if="getTopCard(stage)" class="ds-kb-card" @click="openPanel(getTopCard(stage))">
-										<div class="ds-kb-card-title">{{ getTopCard(stage).title }}</div>
-										<div class="ds-kb-card-who">{{ userNames[getTopCard(stage).assigned_to]||getTopCard(stage).assigned_to||'—' }}</div>
-										<div class="ds-kb-card-foot">
-											<span class="ds-kb-card-val">{{ fmtVal(getTopCard(stage).value) }}</span>
-											<span class="ds-kb-card-days">
-												<span class="ds-kb-days-dot" :style="{ background: daysDotColor(getTopCard(stage).days_in_stage) }"></span>
-												{{ getTopCard(stage).days_in_stage!=null ? getTopCard(stage).days_in_stage+'d' : '—' }}
-											</span>
-										</div>
-									</div>
-									<div v-else class="ds-kb-card-empty">Empty</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div :class="'ds-overlay'+(panelOpen?' visible':'')" @click="panelOpen=false"></div>
-					<EnquiryDetailPanel
-						:open="panelOpen"
-						:enquiry="selEnq"
-						@close="panelOpen=false"
-						@toast="e => $emit('toast',e)"
-						@refresh="() => { $emit('refresh'); panelOpen=false; }"
-					/>
-				</div>
-			`,
-		};
+        // ── DRAG & DROP ──────────────────────────────────────────────────
+        onDragStart: function(enq, event) {
+            this.draggedEnq = enq;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', enq.name);
+            // style the ghost
+            event.target.style.opacity = '0.45';
+        },
+        onDragEnd: function(event) {
+            event.target.style.opacity = '1';
+            this.dragOverStage = null;
+            // draggedEnq cleared after drop or here if dropped outside
+            setTimeout(function() {}, 50);
+        },
+        onDragOver: function(stage, event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            this.dragOverStage = stage;
+        },
+        onDragLeave: function(event) {
+            // only clear if leaving the column entirely
+            if(!event.currentTarget.contains(event.relatedTarget)) {
+                this.dragOverStage = null;
+            }
+        },
+        onDrop: function(stage, event) {
+            event.preventDefault();
+            var self = this;
+            var enq  = self.draggedEnq;
+            self.dragOverStage = null;
+            self.draggedEnq    = null;
+
+            if(!enq || enq.stage === stage) return; // dropped on same stage
+
+            self.movingEnq = enq.name;
+
+            // Optimistic UI — update locally immediately
+            var idx = self.kanbanEnquiries.findIndex(function(e){ return e.name === enq.name; });
+            if(idx !== -1) {
+                self.kanbanEnquiries[idx] = Object.assign({}, self.kanbanEnquiries[idx], {
+                    stage: stage,
+                    days_in_stage: 0,
+                    stage_changed_on: frappe.datetime.get_today(),
+                });
+                // force Vue reactivity
+                self.kanbanEnquiries = self.kanbanEnquiries.slice();
+            }
+
+            // Persist to server
+            frappe.call({
+                method: 'frappe.client.set_value',
+                args: {
+                    doctype: 'CRM Enquiry',
+                    name: enq.name,
+                    fieldname: {
+                        stage: stage,
+                        stage_changed_on: frappe.datetime.get_today(),
+                        days_in_stage: 0,
+                    },
+                },
+                callback: function(r) {
+                    self.movingEnq = null;
+                    if(r.message) {
+                        self.$emit('toast', { msg: '"' + enq.title + '" moved to ' + stage, type:'success' });
+                        self.$emit('refresh');
+                    }
+                },
+                error: function() {
+                    self.movingEnq = null;
+                    // Revert optimistic update
+                    if(idx !== -1) {
+                        self.kanbanEnquiries[idx] = Object.assign({}, self.kanbanEnquiries[idx], { stage: enq.stage });
+                        self.kanbanEnquiries = self.kanbanEnquiries.slice();
+                    }
+                    self.$emit('toast', { msg:'Failed to move enquiry.', type:'error' });
+                },
+            });
+        },
+
+        fmtVal: fmtVal,
+        daysDotColor: daysDotColor,
+        stageClass: stageClass,
+    },
+    template: `
+        <div>
+            <div class="ds-board-wrap">
+                <div class="ds-sec-hdr" style="margin-bottom:14px">
+                    <span class="ds-sec-ttl">My Brief Board</span>
+                    <div class="ds-sec-rule"></div>
+                    <div class="ds-view-toggle">
+                        <button :class="'ds-view-btn'+(viewMode==='brief'?' active':'')" @click="switchView('brief')" title="Brief view">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            Brief
+                        </button>
+                        <button :class="'ds-view-btn'+(viewMode==='kanban'?' active':'')" @click="switchView('kanban')" title="Kanban view">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
+                            Kanban
+                        </button>
+                    </div>
+                    <button class="g-btn g-btn-ghost" style="padding:4px 10px;font-size:11.5px" @click="goFullView">Full view</button>
+                </div>
+
+                <div v-if="loading && viewMode==='brief'" class="ds-empty">Loading…</div>
+                <div v-else-if="kanbanLoading && viewMode==='kanban'" class="ds-empty">Loading…</div>
+
+                <!-- ── BRIEF VIEW ── -->
+                <div v-else-if="viewMode==='brief'" class="ds-board-scroll">
+                    <div class="ds-kb-board">
+                        <div v-for="stage in ['New Lead','Qualified','Proposal','Negotiation','Won','Lost']" :key="stage" class="ds-kb-col">
+                            <div :class="'ds-kb-col-hdr '+stageClass(stage)">
+                                <span class="ds-kb-col-name">{{ stage }}</span>
+                                <span class="ds-kb-col-cnt">{{ countForStage(stage) }}</span>
+                            </div>
+                            <div v-if="getTopCard(stage)" class="ds-kb-card" @click="openPanel(getTopCard(stage))">
+                                <div class="ds-kb-card-title">{{ getTopCard(stage).title }}</div>
+                                <div class="ds-kb-card-who">{{ userNames[getTopCard(stage).assigned_to]||getTopCard(stage).assigned_to||'—' }}</div>
+                                <div class="ds-kb-card-foot">
+                                    <span class="ds-kb-card-val">{{ fmtVal(getTopCard(stage).value) }}</span>
+                                    <span class="ds-kb-card-days">
+                                        <span class="ds-kb-days-dot" :style="{ background: daysDotColor(getTopCard(stage).days_in_stage) }"></span>
+                                        {{ getTopCard(stage).days_in_stage!=null ? getTopCard(stage).days_in_stage+'d' : '—' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div v-else class="ds-kb-card-empty">Empty</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── KANBAN VIEW ── -->
+                <div v-else class="ds-kanban-scroll">
+                    <div class="ds-kanban-board">
+                        <div
+                            v-for="stage in ['New Lead','Qualified','Proposal','Negotiation','Won','Lost']"
+                            :key="stage"
+                            :class="[
+                                'ds-kanban-col',
+                                dragOverStage===stage ? 'ds-kanban-col-over' : '',
+                            ]"
+                            @dragover="onDragOver(stage, $event)"
+                            @dragleave="onDragLeave($event)"
+                            @drop="onDrop(stage, $event)"
+                        >
+                            <div :class="'ds-kb-col-hdr '+stageClass(stage)" style="margin-bottom:8px">
+                                <span class="ds-kb-col-name">{{ stage }}</span>
+                                <span class="ds-kb-col-cnt">{{ kanbanCountForStage(stage) }}</span>
+                            </div>
+
+                            <!-- Drop hint shown when dragging over an empty column -->
+                            <div
+                                v-if="dragOverStage===stage && !kanbanCardsForStage(stage).length"
+                                class="ds-kanban-drop-hint"
+                            >Drop here</div>
+
+                            <div v-if="!kanbanCardsForStage(stage).length && dragOverStage!==stage" class="ds-kb-card-empty">Empty</div>
+
+                            <div
+                                v-for="enq in kanbanCardsForStage(stage)"
+                                :key="enq.name"
+                                :class="[
+                                    'ds-kb-card',
+                                    'ds-kanban-card',
+                                    movingEnq===enq.name ? 'ds-kanban-card-moving' : '',
+                                    draggedEnq && draggedEnq.name===enq.name ? 'ds-kanban-card-dragging' : '',
+                                ]"
+                                draggable="true"
+                                @dragstart="onDragStart(enq, $event)"
+                                @dragend="onDragEnd($event)"
+                                @click="openPanel(enq)"
+                                style="margin-bottom:8px"
+                            >
+                                <!-- Drag handle -->
+                                <div class="ds-kanban-drag-handle" title="Drag to move">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                        <circle cx="9"  cy="5"  r="1" fill="currentColor"/>
+                                        <circle cx="15" cy="5"  r="1" fill="currentColor"/>
+                                        <circle cx="9"  cy="12" r="1" fill="currentColor"/>
+                                        <circle cx="15" cy="12" r="1" fill="currentColor"/>
+                                        <circle cx="9"  cy="19" r="1" fill="currentColor"/>
+                                        <circle cx="15" cy="19" r="1" fill="currentColor"/>
+                                    </svg>
+                                </div>
+
+                                <div class="ds-kb-card-title">{{ enq.title }}</div>
+                                <div class="ds-kb-card-who">{{ userNames[enq.assigned_to]||enq.assigned_to||'—' }}</div>
+                                <div class="ds-kb-card-foot">
+                                    <span class="ds-kb-card-val">{{ fmtVal(enq.value) }}</span>
+                                    <span class="ds-kb-card-days">
+                                        <span class="ds-kb-days-dot" :style="{ background: daysDotColor(enq.days_in_stage) }"></span>
+                                        {{ enq.days_in_stage!=null ? enq.days_in_stage+'d' : '—' }}
+                                    </span>
+                                </div>
+
+                                <!-- Saving spinner -->
+                                <div v-if="movingEnq===enq.name" class="ds-kanban-saving">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="ds-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                                    Moving…
+                                </div>
+                            </div>
+
+                            <!-- Drop zone indicator at bottom of column -->
+                            <div
+                                v-if="dragOverStage===stage && kanbanCardsForStage(stage).length"
+                                class="ds-kanban-drop-hint"
+                            >Drop here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div :class="'ds-overlay'+(panelOpen?' visible':'')" @click="panelOpen=false"></div>
+            <EnquiryDetailPanel
+                :open="panelOpen"
+                :enquiry="selEnq"
+                @close="panelOpen=false"
+                @toast="e => $emit('toast',e)"
+                @refresh="() => { $emit('refresh'); panelOpen=false; }"
+            />
+        </div>
+    `,
+};
+
 
 		// ── EVENT DETAIL PANEL ────────────────────────────────────────────────
 		var EventDetailPanelComp = {
