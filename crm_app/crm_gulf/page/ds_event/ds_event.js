@@ -1,3 +1,4 @@
+
 frappe.pages['ds-event'].on_page_load = function (wrapper) {
 	frappe.ui.make_app_page({
 		parent: wrapper,
@@ -8,40 +9,44 @@ frappe.pages['ds-event'].on_page_load = function (wrapper) {
 	frappe.require([
 		'https://unpkg.com/vue@3/dist/vue.global.prod.js',
 	], function () {
-		frappe.require('/assets/crm_app/css/ds_event.css');
-
-		// ── SCROLL FIX: reset scroll every time this page is shown ──────────
-		// $(wrapper).on('show', function () {
-		// 	var pageBody = $(wrapper).find('.page-content')[0];
-		// 	if (pageBody) pageBody.scrollTop = 0;
-		// 	// Also reset main window scroll
-		// 	var layout = document.querySelector('.layout-main-section');
-		// 	if (layout) layout.scrollTop = 0;
-		// });
+		frappe.require('/assets/sales_cockpit/css/ds_event.css');
 
 		// ── SCROLL FIX ───────────────────────────────────────────────────────
-// ── SCROLL FIX ───────────────────────────────────────────────────────
 function applyScrollFix() {
+    var layoutMain = document.querySelector('.layout-main-section');
+    if (layoutMain) {
+        layoutMain.style.setProperty('overflow-y', 'auto', 'important');
+        layoutMain.style.setProperty('overflow-x', 'hidden', 'important');
+        layoutMain.style.removeProperty('height');
+        layoutMain.style.removeProperty('max-height');
+        layoutMain.scrollTop = 0;
+    }
+
     var pageContent = $(wrapper).find('.page-content')[0];
     if (pageContent) {
-        pageContent.style.setProperty('overflow',   'visible', 'important');
-        pageContent.style.setProperty('height',     'auto',    'important');
-        pageContent.style.setProperty('max-height', 'none',    'important');
-        pageContent.style.setProperty('min-height', '0',       'important');
+        pageContent.style.setProperty('overflow', 'visible', 'important');
+        pageContent.style.removeProperty('height');
+        pageContent.style.removeProperty('max-height');
     }
+
     var pageBody = $(wrapper).find('.page-body')[0];
     if (pageBody) {
-        pageBody.style.setProperty('overflow',   'visible', 'important');
-        pageBody.style.setProperty('height',     'auto',    'important');
-        pageBody.style.setProperty('max-height', 'none',    'important');
+        pageBody.style.setProperty('overflow', 'visible', 'important');
+        pageBody.style.removeProperty('height');
+        pageBody.style.removeProperty('max-height');
     }
 }
 
 applyScrollFix();
 $(wrapper).on('show', function () {
     applyScrollFix();
-    setTimeout(applyScrollFix, 100);
-    setTimeout(applyScrollFix, 400);
+    setTimeout(applyScrollFix, 50);
+    setTimeout(applyScrollFix, 200);
+    setTimeout(function() {
+        var layoutMain = document.querySelector('.layout-main-section');
+        if (layoutMain) layoutMain.scrollTop = 0;
+        applyScrollFix();
+    }, 400);
 });
 
 		var mount = document.createElement('div');

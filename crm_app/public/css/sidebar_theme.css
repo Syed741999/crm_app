@@ -238,7 +238,7 @@
 .frappe-menu.context-menu .dropdown-menu-item:last-child > a,
 .frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a {
   color: #b83232 !important;
-  height: 2px !important;
+  
 }
 .frappe-menu.context-menu .dropdown-menu-item:last-child > a:hover,
 .frappe-menu.context-menu .dropdown-menu-item:nth-last-child(2) > a:hover {

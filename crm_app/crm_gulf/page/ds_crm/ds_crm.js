@@ -1,3 +1,71 @@
+// ── MOBILE SCROLL FIX — watches .main-section ─────────────────────────
+(function() {
+    if (window._dsMobileScrollFixed) return;
+    window._dsMobileScrollFixed = true;
+
+    function fixScroll() {
+        // The real scroll container in your Frappe version
+        var mainSection = document.querySelector('.main-section');
+        if (mainSection) {
+            mainSection.style.setProperty('overflow-y', 'auto', 'important');
+            mainSection.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+            mainSection.style.setProperty('height', '100vh', 'important');
+            mainSection.scrollTop = 0;
+        }
+
+        // Also fix the body wrapper
+        var bodyDiv = document.querySelector('#body');
+        if (bodyDiv) {
+            bodyDiv.style.setProperty('overflow', 'visible', 'important');
+            bodyDiv.style.setProperty('height', 'auto', 'important');
+        }
+
+        // Fix the active page-container
+        var activeContainer = document.querySelector('.page-container[style*="display"]:not([style*="none"]), .page-container.show');
+        if (!activeContainer) {
+            activeContainer = document.querySelector('.page-container');
+        }
+        if (activeContainer) {
+            activeContainer.style.setProperty('overflow', 'visible', 'important');
+            activeContainer.style.setProperty('height', 'auto', 'important');
+        }
+
+        // Fix page-body and page-content
+        ['page-body', 'page-content'].forEach(function(cls) {
+            var el = document.querySelector('.' + cls);
+            if (el) {
+                el.style.setProperty('overflow', 'visible', 'important');
+                el.style.setProperty('height', 'auto', 'important');
+                el.style.setProperty('max-height', 'none', 'important');
+            }
+        });
+    }
+
+    function applyWithDelays() {
+        fixScroll();
+        setTimeout(fixScroll, 100);
+        setTimeout(fixScroll, 400);
+        setTimeout(fixScroll, 800);
+    }
+
+    // Watch URL change — most reliable since URL changes on navigation
+    var lastUrl = location.href;
+    setInterval(function() {
+        if (location.href !== lastUrl) {
+            lastUrl = location.href;
+            applyWithDelays();
+        }
+    }, 200);
+
+    // Also hook Frappe events
+    $(document).on('page-change', applyWithDelays);
+    window.addEventListener('hashchange', applyWithDelays);
+
+    // Run on load too
+    applyWithDelays();
+})();
+
+
 frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 	frappe.ui.make_app_page({
 		parent: wrapper,
@@ -5,44 +73,49 @@ frappe.pages['ds-crm'].on_page_load = function (wrapper) {
 		single_column: true,
 	});
 
+	
+
 	frappe.require([
 		'https://unpkg.com/vue@3/dist/vue.global.prod.js',
 	], function () {
-		frappe.require('/assets/crm_app/css/ds_crm.css');
+		frappe.require('/assets/sales_cockpit/css/ds_crm.css');
 
 		// ── SCROLL FIX ───────────────────────────────────────────────────────
-
-// ── SCROLL FIX ───────────────────────────────────────────────────────
 function applyScrollFix() {
-    // DO NOT touch the sidebar or navbar — only fix the content area
     var layoutMain = document.querySelector('.layout-main-section');
     if (layoutMain) {
-        layoutMain.style.setProperty('overflow-y', 'auto',    'important');
-        layoutMain.style.setProperty('overflow-x', 'hidden',  'important');
-        layoutMain.style.setProperty('height',     '100vh',   'important');
-        layoutMain.style.setProperty('max-height', '100vh',   'important');
+        layoutMain.style.setProperty('overflow-y', 'auto', 'important');
+        layoutMain.style.setProperty('overflow-x', 'hidden', 'important');
+        layoutMain.style.removeProperty('height');
+        layoutMain.style.removeProperty('max-height');
+        layoutMain.scrollTop = 0;
     }
 
     var wrapper2 = document.querySelector('.layout-main-section-wrapper');
     if (wrapper2) {
-        wrapper2.style.setProperty('overflow',   'visible', 'important');
-        wrapper2.style.setProperty('height',     'auto',    'important');
-        wrapper2.style.setProperty('max-height', 'none',    'important');
+        wrapper2.style.setProperty('overflow', 'visible', 'important');
+        wrapper2.style.removeProperty('height');
+        wrapper2.style.removeProperty('max-height');
     }
 
     var pageContent = $(wrapper).find('.page-content')[0];
     if (pageContent) {
-        pageContent.style.setProperty('overflow',   'visible', 'important');
-        pageContent.style.setProperty('height',     'auto',    'important');
-        pageContent.style.setProperty('max-height', 'none',    'important');
+        pageContent.style.setProperty('overflow', 'visible', 'important');
+        pageContent.style.removeProperty('height');
+        pageContent.style.removeProperty('max-height');
     }
 }
 
 applyScrollFix();
 $(wrapper).on('show', function () {
     applyScrollFix();
-    setTimeout(applyScrollFix, 100);
-    setTimeout(applyScrollFix, 400);
+    setTimeout(applyScrollFix, 50);
+    setTimeout(applyScrollFix, 200);
+    setTimeout(function() {
+        var layoutMain = document.querySelector('.layout-main-section');
+        if (layoutMain) layoutMain.scrollTop = 0;
+        applyScrollFix();
+    }, 400);
 });
 
 		var mount = document.createElement('div');
